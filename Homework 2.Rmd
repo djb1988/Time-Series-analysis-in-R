@@ -1,0 +1,72 @@
+---
+title: "Homework"
+author: "Dan Bilsker"
+date: "2022-09-20"
+output: pdf_document
+---
+
+
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```
+
+
+
+```{r chunk 1}
+
+AR_1 <- arima.sim(model=list(ar=c(0.8)),n = 500)
+
+ts.plot(AR_1)
+acf(AR_1)
+#Since  absoltute value of lambda is less than 1, it looks stationary
+#the acf is decreasing in the long term
+```
+
+
+
+
+
+
+
+
+```{r chunk 2}
+MA_2 <- arima.sim(n=500, model=list(ma=c(0.5,0.4)))
+ts.plot(MA_2)
+
+acf(MA_2)
+##the absolute value of the second coefficient is less than zero and other two 
+
+##conditions satisfied for invertibility
+#for the theoretical acf,for lag greater than 2, the acf is supposed to be 0, 
+# and for 1 and 2 it's supposed to be a value above 0, which is what I have
+```
+
+
+
+
+
+
+```{r chunk 3}
+AR_2 <- arima.sim(model=list(ar=c(-0.85,0.1)), n=500)
+ts.plot(AR_2)
+acf(AR_2)
+#looks stationary
+#acf as expected
+```
+
+
+```{r chunk 4}
+ARMA_1_1 <- arima.sim(n=500,model=list(ar=c(0.9),ma= c(0.8)))
+ts.plot(ARMA_1_1)
+acf(ARMA_1_1)
+#looks pretty much stationary
+#acf decays as expected
+```
+
+

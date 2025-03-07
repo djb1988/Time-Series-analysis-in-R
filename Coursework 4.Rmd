@@ -1,0 +1,68 @@
+---
+title: "Coursework 4"
+author: "Dan Bilsker"
+date: "2022-10-22"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r chunk1}
+data(Nile)
+ts.plot(Nile)
+acf(Nile)
+pacf(Nile)
+#Looks like an AR(1). 
+#There is one spike in PACF like AR(1) and the ACF is 
+#decaying like AR(1) with some blips because it is a sample. 
+
+#It's hard to say what the parameter should be since the decay 
+#is supposed to be lamba^|h|, which it does not match precisely, 
+#but a guess might be .45
+
+```
+``` {r chunk 2}
+fit <- arima(Nile, order = c(1,0,0))
+tsdiag( fit )
+#standardized residuals look like white noise.the ACF 
+#of residuals looks like the ACF of  white noise and 
+#p values are all above blue line, with almost half above 0.5.
+```
+
+
+
+``` {r chunk 3}
+#Question 2
+#To quote the text: "In general if we fit an 
+#ARMA(p, q) model and the residuals look like an 
+#ARMA(p', q ') model, then the next model we should
+#fit is an ARMA(p + p', q + q') model. 
+
+#Thus, since we tried to fit an ARMA(0,1) model 
+#and the residuals looks like an ARMA(1,0), 
+#then we should try to fit an ARMA(0 +1,1+0)
+#i.e ARMA(1,1) model.
+
+#Question 3: Since the expectation 
+#of Y_t is beta_0 + beta_1*E(t) + 0, 
+#the expectation i.e. the mean, is not constant, 
+#since it is a function of time.
+
+# W_t is Y_t -Y_(t-1)-beta_1 which by algebra is 
+#beta_0 +beta_1*t + Z_t +0.6*Z_(t-1) -beta_0 -beta_1*(t-1) - Z_(t-1) -0.6*Z_(t-2) -beta_1 which equals 
+# beta_1*t +Z_t -0.4*Z_(t-1)-0.6*Z_(t-2) - beta_1
+#So Z_t -0.4 *Z_(t-1) -0.6*Z_(t-2)= beta_1 -beta_1*t
+# The left side is an MA(2) (The right side we can rename as X_t = beta_1 -beta_1 *t and 
+#then this becomes an ARIMA(0,0,2))
+
+# To be invertible, the MA(2) must satisfy these conditions:
+#1) -theta_1 -theta_2 < 1
+#2)-theta_2 + theta_1 < 1
+#3) |theta_2| < 1
+
+# Plugging this in, we get:
+
+# - (-0.4) -  (-0.6) = 1
+# which is not less than 1. So, not invertible. 
+```
+

@@ -1,0 +1,43 @@
+---
+title: "Computer Lab 5"
+author: "Dan Bilsker"
+date: "2022-11-01"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+``` {r chunk5}
+x <- scan("downloads/HuronLevels.txt")
+y <- ts( x , start=c(1900,1), frequency=12 )
+ts.plot(y)
+```   
+``` {r chunk 2}
+
+library(forecast)
+z<-USAccDeaths
+fit1 <- arima(z, order = c(0,1,1), seasonal = list(order = c(0,1,1)))
+ahead<-6
+autoplot(forecast(z,h=ahead,model=fit1))
+forecasted<-forecast(z,h=ahead,model=fit1,level=95)
+actual<-ts(z[49:72],frequency=12,start=1977)
+usacc<-cbind(forecasted$mean,forecasted$upper,forecasted$lower,actual)
+autoplot(usacc)
+```
+``` {r chunk 3}
+data(sunspots)
+ts.plot(sunspots)
+acf(sunspots,lag.max=10000)
+pacf(sunspots,,lag.max=30)
+fit2 <- arima(sunspots, order = c(1,0,1))
+tsdiag(fit2)
+
+
+```
+  
+
+

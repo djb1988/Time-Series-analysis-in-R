@@ -1,0 +1,73 @@
+---
+title: "Time Series"
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+date: "2022-09-06"
+---
+##First Tab
+"This is time series"
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+```{r chunk 2}
+x = rnorm(1000)
+hist(x)
+```
+
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+$$ x_t
+= .5 x_{t-1} +Z_t $$
+
+
+
+```{r chunk 4}
+phi1 <- 0.9
+sigmaz <- 0.5
+y <- arima.sim(n=1000,model=list( ar=c(phi1) ), sd=sigmaz)
+# simulates from the AR(1) model
+ts.plot(y) # plot the time series
+acf(y) # provides a plot of the sample autocorrelation function (ACF)
+lines (0:100, ARMAacf(ar=c(phi1),ma= c(0),lag.max=100) , col=2)
+#add the theoretical acf for the model 
+```
+```{r chunk5}
+n <- 1000 # state the sample size
+x <- numeric(n) # define a vector of length n where the simulated values
+# of the process are going to be stored stored.
+x[1] <- rnorm(1,0,sigmaz)
+# set the first value to be random Gaussian white noise
+z <- rnorm(n,0,sigmaz) #Gaussian white noise
+for (t in 2:n) {
+x[t] <- phi1*x[t-1] + z[t]
+}
+# rnorm(n,mu,sigma) simulates a vector of n
+# i.i.d. observations from Normal(mu,sigma^2)
+ts.plot(x)
+acf(x) #sample acf
+lines (0:100, ARMAacf(ar=c(phi1),ma= c(0),lag.max=100) , col=2)
+#add the theoretical acf for the model
+```
